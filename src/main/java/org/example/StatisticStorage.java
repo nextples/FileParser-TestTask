@@ -10,16 +10,24 @@ public class StatisticStorage {
     private static long maxStringLength = Long.MIN_VALUE;
     private static long minStringLength = Long.MAX_VALUE;
 
-    public static void createShortStat(int number) {
+    public static void addInt(double number) {
         intNumber++;
+        isMaximumNumber(number);
+        isMinimumNumber(number);
+        totalSum += number;
     }
 
-    public static void createShortStat(double number) {
+    public static void addFloat(double number) {
         floatNumber++;
+        isMaximumNumber(number);
+        isMinimumNumber(number);
+        totalSum += number;
     }
 
-    public static void createShortStat(String str) {
+    public static void addString(String string) {
         stringNumber++;
+        isMaximumLength(string);
+        isMinimumLength(string);
     }
 
     private static void isMaximumNumber(double number) {
@@ -34,20 +42,6 @@ public class StatisticStorage {
         }
     }
 
-    public static void createFullStat(int number) {
-        createShortStat(number);
-        isMaximumNumber((double)number);
-        isMinimumNumber((double)number);
-        totalSum += (double)number;
-    }
-
-    public static void createFullStat(double number) {
-        createShortStat(number);
-        isMaximumNumber(number);
-        isMinimumNumber(number);
-        totalSum += number;
-    }
-
     private static void isMaximumLength(String string) {
         if (string.length() > maxStringLength) {
             maxStringLength = string.length();
@@ -58,12 +52,6 @@ public class StatisticStorage {
         if (string.length() < minStringLength) {
             minStringLength = string.length();
         }
-    }
-
-    public static void createFullStat(String string) {
-        createShortStat(string);
-        isMaximumLength(string);
-        isMinimumLength(string);
     }
 
     public static void printShortStat() {
@@ -87,13 +75,11 @@ public class StatisticStorage {
             System.out.println("Min value: \t" + minNumber);
             double avgValue = totalSum / (intNumber + floatNumber);
             System.out.println("Avg value: \t" + avgValue);
-
         }
         else {
             System.out.println("Max value: \t-");
             System.out.println("Min value: \t-");
             System.out.println("Avg value: \t-");
-
         }
         System.out.println("Total sum: \t" + totalSum);
         if (stringNumber > 0) {

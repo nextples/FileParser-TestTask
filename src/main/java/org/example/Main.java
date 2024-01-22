@@ -1,6 +1,5 @@
 package org.example;
 
-
 import org.apache.commons.cli.*;
 import java.io.*;
 
@@ -30,7 +29,7 @@ public class Main {
         try {
             commandLine = cmdParser.parse(utilOptions, args);
         } catch (ParseException e) {
-            System.err.println("Invalid command line arguments were passed");
+            System.err.println("Invalid command line options/arguments were passed");
             System.exit(1);
         }
         String[] programArgs = commandLine.getArgs();
@@ -54,6 +53,7 @@ public class Main {
         int floatCounter = 0;
         int stringCounter = 0;
 
+
         for (int i = 0; i < programArgs.length; i++) {
             BufferedReader buffReader = null;
             String currentLine = null;
@@ -65,66 +65,48 @@ public class Main {
                 System.exit(1);
             }
 
-
-
             try {
                 while (currentLine != null) {
                     if (TypeDetector.isLineInteger(currentLine)) {
                         File integers = new File(intSavePath);
-                        if (!(integers.exists() /*&& integers.isFile())*/)) {
+                        if (!integers.exists()) {
                             integers.createNewFile();
                         }
                         FileWriter intWriter = new FileWriter(integers, commandLine.hasOption("a") || (intCounter != 0));
                         intWriter.write(currentLine + "\n");
                         intWriter.close();
                         intCounter++;
-                        if (commandLine.hasOption("f")) {
-                            StatisticStorage.createFullStat(Integer.parseInt(currentLine));
-                        }
-                        else {
-                            StatisticStorage.createShortStat(Integer.parseInt(currentLine));
-                        }
+                        StatisticStorage.addInt(Double.parseDouble(currentLine));
                         currentLine = buffReader.readLine();
                     }
                     else if (TypeDetector.isLineFloat(currentLine)) {
                         File floats = new File(floatSavePath);
-                        if (!(floats.exists() && floats.isFile())) {
+                        if (!floats.exists()) {
                             floats.createNewFile();
                         }
                         FileWriter floatWriter = new FileWriter(floats, commandLine.hasOption("a") || (floatCounter != 0));
                         floatWriter.write(currentLine + "\n");
                         floatWriter.close();
                         floatCounter++;
-                        if (commandLine.hasOption("f")) {
-                            StatisticStorage.createFullStat(Double.parseDouble(currentLine));
-                        }
-                        else {
-                            StatisticStorage.createShortStat(Double.parseDouble(currentLine));
-                        }
+                        StatisticStorage.addFloat(Double.parseDouble(currentLine));
                         currentLine = buffReader.readLine();
                     }
                     else {
                         File strings = new File(stringSavePath);
-                        if (!(strings.exists() && strings.isFile())) {
+                        if (!strings.exists()) {
                             strings.createNewFile();
                         }
                         FileWriter stringWriter = new FileWriter(strings, commandLine.hasOption("a") || (stringCounter != 0));
                         stringWriter.write(currentLine + "\n");
                         stringWriter.close();
                         stringCounter++;
-                        if (commandLine.hasOption("f")) {
-                            StatisticStorage.createFullStat(currentLine);
-                        }
-                        else {
-                            StatisticStorage.createShortStat(currentLine);
-                        }
+                        StatisticStorage.addString(currentLine);
                         currentLine = buffReader.readLine();
                     }
-
                 }
                 buffReader.close();
             } catch (IOException e) {
-                System.err.println("Incorrect save path was passed\n ");
+                System.err.println("Incorrect save path was passed");
                 System.exit(1);
             }
         }
